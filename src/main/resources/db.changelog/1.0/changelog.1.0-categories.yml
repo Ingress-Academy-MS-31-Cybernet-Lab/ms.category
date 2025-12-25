@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2-create-categories
+      author: elnur.ahmadov
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: parent_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: slug
+                  type: TEXT
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: level
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sort_order
+                  type: INT
+                  defaultValueNumeric: 0
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValue: now()
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP

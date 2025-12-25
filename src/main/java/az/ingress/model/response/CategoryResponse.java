@@ -16,6 +16,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryResponse implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
     private String name;
     private String slug;

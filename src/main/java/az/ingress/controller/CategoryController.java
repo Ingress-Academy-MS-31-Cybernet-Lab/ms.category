@@ -19,7 +19,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/v1/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 

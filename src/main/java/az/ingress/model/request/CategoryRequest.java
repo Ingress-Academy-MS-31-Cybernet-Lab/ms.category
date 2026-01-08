@@ -1,23 +1,23 @@
 package az.ingress.model.request;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotBlank;
+
+import static az.ingress.model.constants.ValidationMessages.CATEGORY_NAME_NOT_BLANK;
+import static az.ingress.model.constants.ValidationMessages.CATEGORY_SLUG_NOT_BLANK;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryRequest {
-    Long parentId;
-    @NotBlank(message = "Name cannot be null or empty")
-    String name;
+    private Long parentId;
+    @NotBlank(message = CATEGORY_NAME_NOT_BLANK)
+    private String name;
 
-    @NotBlank(message = "Slug cannot be null or empty")
-    String slug;
-    Integer sortOrder;
+    @NotBlank(message = CATEGORY_SLUG_NOT_BLANK)
+    private String slug;
+    private Integer sortOrder;
 }

@@ -1,5 +1,6 @@
 package az.ingress.model.response;
 
+import az.ingress.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,6 @@ public class CategoryTreeResponse implements Serializable {
     private String name;
     private String slug;
     private Integer sortOrder;
-    private Boolean isActive;
+    private Status status;
     private List<CategoryTreeResponse> children;
 }

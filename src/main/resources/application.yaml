@@ -19,9 +19,7 @@ spring:
       ddl-auto: validate
 
   liquibase:
-    enabled: true
     change-log: classpath:db.changelog/changelog-master.yml
-    contexts: development
 
 redis:
   server:

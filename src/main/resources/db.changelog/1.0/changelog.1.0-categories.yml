@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 2-create-categories
+      id: 1-create-categories
       author: elnur.ahmadov
       changes:
         - createTable:
@@ -25,25 +25,22 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: slug
-                  type: TEXT
+                  type: VARCHAR(32)
                   constraints:
                     nullable: false
                     unique: true
               - column:
-                  name: level
+                  name: status
                   type: VARCHAR(20)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: is_active
-                  type: BOOLEAN
-                  defaultValueBoolean: true
+                  defaultValue: ACTIVE
                   constraints:
                     nullable: false
               - column:
                   name: sort_order
                   type: INT
                   defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
                   type: TIMESTAMP
@@ -51,3 +48,9 @@ databaseChangeLog:
               - column:
                   name: updated_at
                   type: TIMESTAMP
+        - addForeignKeyConstraint:
+            baseTableName: categories
+            baseColumnNames: parent_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            constraintName: fk_category_parent

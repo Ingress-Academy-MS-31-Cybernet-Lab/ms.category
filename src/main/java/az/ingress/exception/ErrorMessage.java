@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum ErrorMessage {
     UNEXPECTED_ERROR("unexpected.error"),
     CATEGORY_SLUG_CONFLICT("category.slug"),
-    CATEGORY_NOT_FOUND("not.found-category");
+    CATEGORY_NOT_FOUND("error.category.not.found");
 
     private final String value;
 }

@@ -27,8 +27,4 @@ public class CacheUtil {
     public void deleteKey(String cacheKey) {
         redissonClient.getKeys().delete(cacheKey);
     }
-
-    public void deleteKeysByPattern(String pattern) {
-        redissonClient.getKeys().deleteByPattern(pattern);
-    }
 }

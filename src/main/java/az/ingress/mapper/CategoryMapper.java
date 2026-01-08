@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static az.ingress.model.enums.Status.ACTIVE;
+
 public enum CategoryMapper {
     CATEGORY_MAPPER;
 
@@ -25,7 +27,7 @@ public enum CategoryMapper {
                                 ? categoryRequest.getSortOrder()
                                 : 0
                 )
-                .isActive(true)
+                .status(ACTIVE)
                 .build();
     }
 
@@ -34,8 +36,7 @@ public enum CategoryMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .slug(entity.getSlug())
-                .level(entity.getLevel())
-                .isActive(entity.getIsActive())
+                .status(entity.getStatus())
                 .sortOrder(entity.getSortOrder())
                 .parentId(entity.getParent() != null ? entity.getParent().getId() : null)
                 .build();
@@ -67,7 +68,7 @@ public enum CategoryMapper {
                         cat.getName(),
                         cat.getSlug(),
                         cat.getSortOrder(),
-                        cat.getIsActive(),
+                        cat.getStatus(),
                         new ArrayList<>()
                 ))
                 .collect(Collectors.toMap(CategoryTreeResponse::getId, Function.identity()));

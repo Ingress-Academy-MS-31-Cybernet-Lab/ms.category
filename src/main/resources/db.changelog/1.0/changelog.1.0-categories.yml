@@ -16,8 +16,6 @@ databaseChangeLog:
               - column:
                   name: parent_id
                   type: BIGINT
-                  constraints:
-                    nullable: true
               - column:
                   name: name
                   type: TEXT
@@ -31,7 +29,7 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: status
-                  type: VARCHAR(20)
+                  type: VARCHAR(32)
                   defaultValue: ACTIVE
                   constraints:
                     nullable: false

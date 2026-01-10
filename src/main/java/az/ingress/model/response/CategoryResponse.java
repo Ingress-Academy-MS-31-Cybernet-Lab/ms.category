@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -22,5 +23,5 @@ public class CategoryResponse implements Serializable {
     private String slug;
     private Status status;
     private Integer sortOrder;
-    private Long parentId;
+    private List<CategoryResponse> children;
 }

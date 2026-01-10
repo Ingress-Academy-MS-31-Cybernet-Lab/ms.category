@@ -1,7 +1,7 @@
 package az.ingress.controller;
 
 import az.ingress.model.request.CategoryRequest;
-import az.ingress.model.response.CategoryTreeResponse;
+import az.ingress.model.response.CategoryResponse;
 import az.ingress.service.abstraction.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +25,12 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
+    public void createCategory(@RequestBody @Valid CategoryRequest categoryRequest) {
         categoryService.createCategory(categoryRequest);
     }
 
     @GetMapping
-    public List<CategoryTreeResponse> getCategoryTree() {
-        return categoryService.getCategoryTree();
+    public List<CategoryResponse> getCategories() {
+        return categoryService.getCategories();
     }
 }

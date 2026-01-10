@@ -10,7 +10,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,6 +19,7 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -39,7 +39,7 @@ public class CategoryEntity {
 
     private String slug;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private Status status;
 
     private Integer sortOrder;

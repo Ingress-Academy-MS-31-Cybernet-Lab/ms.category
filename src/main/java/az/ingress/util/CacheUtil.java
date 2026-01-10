@@ -18,13 +18,16 @@ public class CacheUtil {
         return bucket == null ? null : bucket.get();
     }
 
-    public <T> void saveToCache(String cacheKey, T value, Long expireTime, TemporalUnit temporalUnit) {
+    public <T> void saveToCache(String cacheKey, T value, int expireTime, TemporalUnit temporalUnit) {
         var bucket = redissonClient.getBucket(cacheKey);
         bucket.set(value);
         bucket.expire(Duration.of(expireTime, temporalUnit));
     }
 
     public void deleteKey(String cacheKey) {
-        redissonClient.getKeys().delete(cacheKey);
+        var bucket = redissonClient.getBucket(cacheKey);
+        if (bucket.isExists()) {
+            bucket.delete();
+        }
     }
 }

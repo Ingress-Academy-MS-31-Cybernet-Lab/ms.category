@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
-import static az.ingress.model.constants.ValidationMessages.CATEGORY_NAME_NOT_BLANK;
-import static az.ingress.model.constants.ValidationMessages.CATEGORY_SLUG_NOT_BLANK;
+import static az.ingress.model.constants.ValidationConstants.CATEGORY_NAME_NOT_BLANK;
+import static az.ingress.model.constants.ValidationConstants.CATEGORY_SLUG_NOT_BLANK;
 
 @Data
 @NoArgsConstructor

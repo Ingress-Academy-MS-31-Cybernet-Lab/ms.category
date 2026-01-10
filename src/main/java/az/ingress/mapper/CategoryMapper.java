@@ -3,8 +3,6 @@ package az.ingress.mapper;
 import az.ingress.dao.entity.CategoryEntity;
 import az.ingress.model.request.CategoryRequest;
 import az.ingress.model.response.CategoryResponse;
-import az.ingress.model.response.CategorySimpleResponse;
-import az.ingress.model.response.CategoryTreeResponse;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -31,53 +29,23 @@ public enum CategoryMapper {
                 .build();
     }
 
-    public CategoryResponse toCategoryResponse(CategoryEntity entity) {
-        return CategoryResponse.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .slug(entity.getSlug())
-                .status(entity.getStatus())
-                .sortOrder(entity.getSortOrder())
-                .parentId(entity.getParent() != null ? entity.getParent().getId() : null)
-                .build();
-    }
-
-    public List<CategoryResponse> toCategoryResponseList(List<CategoryEntity> categories) {
-        return categories.stream()
-                .map(this::toCategoryResponse)
-                .toList();
-    }
-
-    public CategorySimpleResponse toSimpleResponse(CategoryEntity entity) {
-        return CategorySimpleResponse.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .build();
-    }
-
-    public List<CategorySimpleResponse> toSimpleResponseList(List<CategoryEntity> categories) {
-        return categories.stream()
-                .map(this::toSimpleResponse)
-                .toList();
-    }
-
-    public List<CategoryTreeResponse> toTreeResponseList(List<CategoryEntity> categories) {
-        Map<Long, CategoryTreeResponse> idToNode = categories.stream()
-                .map(cat -> new CategoryTreeResponse(
+    public List<CategoryResponse> toResponseList(List<CategoryEntity> categories) {
+        Map<Long, CategoryResponse> idToNode = categories.stream()
+                .map(cat -> new CategoryResponse(
                         cat.getId(),
                         cat.getName(),
                         cat.getSlug(),
-                        cat.getSortOrder(),
                         cat.getStatus(),
+                        cat.getSortOrder(),
                         new ArrayList<>()
                 ))
-                .collect(Collectors.toMap(CategoryTreeResponse::getId, Function.identity()));
+                .collect(Collectors.toMap(CategoryResponse::getId, Function.identity()));
 
-        List<CategoryTreeResponse> roots = new ArrayList<>();
+        List<CategoryResponse> roots = new ArrayList<>();
         for (CategoryEntity cat : categories) {
-            CategoryTreeResponse node = idToNode.get(cat.getId());
+            CategoryResponse node = idToNode.get(cat.getId());
             if (cat.getParent() != null) {
-                CategoryTreeResponse parentNode = idToNode.get(cat.getParent().getId());
+                CategoryResponse parentNode = idToNode.get(cat.getParent().getId());
                 parentNode.getChildren().add(node);
             } else {
                 roots.add(node);
@@ -89,8 +57,8 @@ public enum CategoryMapper {
         return roots;
     }
 
-    private void sortChildrenRecursively(List<CategoryTreeResponse> nodes) {
-        nodes.sort(Comparator.comparing(CategoryTreeResponse::getSortOrder));
+    private void sortChildrenRecursively(List<CategoryResponse> nodes) {
+        nodes.sort(Comparator.comparing(CategoryResponse::getSortOrder));
         nodes.forEach(node -> sortChildrenRecursively(node.getChildren()));
     }
 

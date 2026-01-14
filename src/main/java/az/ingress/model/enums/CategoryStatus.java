@@ -1,6 +1,6 @@
 package az.ingress.model.enums;
 
-public enum Status {
+public enum CategoryStatus {
     ACTIVE,
     INACTIVE
 }

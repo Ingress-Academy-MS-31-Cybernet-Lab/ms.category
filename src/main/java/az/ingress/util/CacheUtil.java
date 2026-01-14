@@ -26,7 +26,7 @@ public class CacheUtil {
 
     public void deleteKey(String cacheKey) {
         var bucket = redissonClient.getBucket(cacheKey);
-        if (bucket.isExists()) {
+        if (bucket != null) {
             bucket.delete();
         }
     }

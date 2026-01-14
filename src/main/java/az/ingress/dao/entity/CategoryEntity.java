@@ -1,6 +1,6 @@
 package az.ingress.dao.entity;
 
-import az.ingress.model.enums.Status;
+import az.ingress.model.enums.CategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,7 +40,7 @@ public class CategoryEntity {
     private String slug;
 
     @Enumerated(STRING)
-    private Status status;
+    private CategoryStatus status;
 
     private Integer sortOrder;
 

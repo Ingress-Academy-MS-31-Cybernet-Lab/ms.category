@@ -2,7 +2,6 @@ package az.ingress.exception;
 
 import az.ingress.logger.ApplicationLogger;
 import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -10,9 +9,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
+import static az.ingress.exception.ErrorMessage.CATEGORY_METHOD_NOT_ALLOWED;
 import static az.ingress.exception.ErrorMessage.CATEGORY_NOT_FOUND;
 import static az.ingress.exception.ErrorMessage.CATEGORY_SLUG_ALREADY_EXISTS;
 import static az.ingress.exception.ErrorMessage.UNEXPECTED_ERROR;
+import static az.ingress.exception.ErrorMessage.VALIDATION_ERROR;
 import static az.ingress.model.constants.LocalizationConstants.ERROR_BUNDLE;
 import static az.ingress.model.constants.LocalizationConstants.VALIDATION_BUNDLE;
 import static az.ingress.util.LocalizationUtil.LOCALIZATION_UTIL;
@@ -30,14 +31,18 @@ public class ErrorHandler {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ErrorResponse handle(Exception ex) {
         log.error("Exception: ", ex);
-        return new ErrorResponse(UNEXPECTED_ERROR.getValue());
+        String message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, UNEXPECTED_ERROR.getValue());
+
+        return new ErrorResponse(message);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(METHOD_NOT_ALLOWED)
     public ErrorResponse handle(HttpRequestMethodNotSupportedException ex) {
         log.error("HttpRequestMethodNotSupportedException: ", ex);
-        return new ErrorResponse(ex.getMessage());
+        String message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, CATEGORY_METHOD_NOT_ALLOWED.getValue());
+
+        return new ErrorResponse(message);
     }
 
     @ExceptionHandler(ConflictException.class)
@@ -58,18 +63,22 @@ public class ErrorHandler {
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(BAD_REQUEST)
-    public ValidationErrorResponse handle(BindException ex) {
+    public ErrorResponse handle(BindException ex) {
         log.error("BindException: ", ex);
 
-        List<String> errors = ex.getBindingResult().getAllErrors().stream()
+        List<String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
                 .map(error -> {
-                    String fieldName = ((FieldError) error).getField();
+                    String fieldName = error.getField();
                     String errorKey = error.getDefaultMessage();
                     String errorMessage = LOCALIZATION_UTIL.getMessageByKey(VALIDATION_BUNDLE, errorKey);
                     return fieldName + ": " + errorMessage;
                 })
                 .toList();
 
-        return new ValidationErrorResponse(errors);
+        String message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, VALIDATION_ERROR.getValue());
+
+        return new ErrorResponse(message, errors);
     }
 }

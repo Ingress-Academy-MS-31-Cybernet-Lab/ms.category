@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static az.ingress.model.enums.Status.ACTIVE;
+import static az.ingress.model.enums.CategoryStatus.ACTIVE;
 
 public enum CategoryMapper {
     CATEGORY_MAPPER;

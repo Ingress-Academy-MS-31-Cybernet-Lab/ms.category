@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
-
 import static az.ingress.exception.ErrorMessage.CATEGORY_METHOD_NOT_ALLOWED;
 import static az.ingress.exception.ErrorMessage.CATEGORY_NOT_FOUND;
 import static az.ingress.exception.ErrorMessage.CATEGORY_SLUG_ALREADY_EXISTS;
@@ -31,18 +29,20 @@ public class ErrorHandler {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     public ErrorResponse handle(Exception ex) {
         log.error("Exception: ", ex);
-        String message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, UNEXPECTED_ERROR.getValue());
+        var message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, UNEXPECTED_ERROR.getValue());
 
-        return new ErrorResponse(message);
+        return ErrorResponse.builder()
+                .message(message).build();
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(METHOD_NOT_ALLOWED)
     public ErrorResponse handle(HttpRequestMethodNotSupportedException ex) {
         log.error("HttpRequestMethodNotSupportedException: ", ex);
-        String message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, CATEGORY_METHOD_NOT_ALLOWED.getValue());
+        var message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, CATEGORY_METHOD_NOT_ALLOWED.getValue());
 
-        return new ErrorResponse(message);
+        return ErrorResponse.builder()
+                .message(message).build();
     }
 
     @ExceptionHandler(ConflictException.class)
@@ -50,7 +50,8 @@ public class ErrorHandler {
     public ErrorResponse handle(ConflictException ex) {
         log.error("ConflictException: ", ex);
         var message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, CATEGORY_SLUG_ALREADY_EXISTS.getValue());
-        return new ErrorResponse(message);
+        return ErrorResponse.builder()
+                .message(message).build();
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -58,7 +59,8 @@ public class ErrorHandler {
     public ErrorResponse handle(NotFoundException ex) {
         log.error("NotFoundException: ", ex);
         var message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, CATEGORY_NOT_FOUND.getValue());
-        return new ErrorResponse(message);
+        return ErrorResponse.builder()
+                .message(message).build();
     }
 
     @ExceptionHandler(BindException.class)
@@ -66,19 +68,22 @@ public class ErrorHandler {
     public ErrorResponse handle(BindException ex) {
         log.error("BindException: ", ex);
 
-        List<String> errors = ex.getBindingResult()
+        var errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> {
-                    String fieldName = error.getField();
-                    String errorKey = error.getDefaultMessage();
-                    String errorMessage = LOCALIZATION_UTIL.getMessageByKey(VALIDATION_BUNDLE, errorKey);
+                    var fieldName = error.getField();
+                    var errorKey = error.getDefaultMessage();
+                    var errorMessage = LOCALIZATION_UTIL.getMessageByKey(VALIDATION_BUNDLE, errorKey);
                     return fieldName + ": " + errorMessage;
                 })
                 .toList();
 
-        String message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, VALIDATION_ERROR.getValue());
+        var message = LOCALIZATION_UTIL.getMessageByKey(ERROR_BUNDLE, VALIDATION_ERROR.getValue());
 
-        return new ErrorResponse(message, errors);
+        return ErrorResponse.builder()
+                .message(message)
+                .errors(errors)
+                .build();
     }
 }

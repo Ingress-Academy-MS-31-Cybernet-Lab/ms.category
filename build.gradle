@@ -21,7 +21,8 @@ repositories {
 dependencies {
     //spring
     implementation "org.springframework.boot:spring-boot-starter-web"
-
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
     //lombok
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
@@ -34,6 +35,15 @@ dependencies {
     testImplementation "io.github.benas:random-beans:$randomBeansVersion"
     testImplementation "org.spockframework:spock-spring:$spockSpringVersion"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+    //liquibase
+    implementation "org.liquibase:liquibase-core"
+
+    //db
+    runtimeOnly 'org.postgresql:postgresql'
+
+    //redis
+    implementation "org.redisson:redisson:$redissonVersion"
 }
 
 test {

@@ -15,8 +15,8 @@ class HealthControllerTest extends Specification {
     def setup() {
         healthController = new HealthController()
         mockMvc = MockMvcBuilders.standaloneSetup(healthController)
-                                 .setControllerAdvice(new ErrorHandler())
-                                 .build()
+                .setControllerAdvice(new ErrorHandler())
+                .build()
     }
 
     def "TestCheckHealthy"() {

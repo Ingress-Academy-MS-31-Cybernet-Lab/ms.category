@@ -62,8 +62,6 @@ class CategoryControllerTest extends Specification {
         def parentCategory = random.nextObject(CategoryResponse, "children")
         parentCategory.children = [childCategory]
 
-        def response = [parentCategory]
-
         def jsonResponse = """
                                     [
                                         {
@@ -90,11 +88,152 @@ class CategoryControllerTest extends Specification {
         def actual = mockMvc.perform(get(url).accept(APPLICATION_JSON))
 
         then:
-        1 * categoryService.getCategories() >> response
+        1 * categoryService.getCategories() >> [parentCategory]
         actual.andExpectAll(
                 status().isOk(),
-                content().json(jsonResponse)
+                content().json(jsonResponse, true)
         )
     }
 
+    def "TestCreateCategory: validation error when name is blank"() {
+        given:
+        def url = "/v1/categories"
+        def request = random.nextObject(CategoryRequest)
+        request.name = ""
+        def jsonRequest = """
+                                    {
+                                      "parentId": $request.parentId,
+                                      "name": "$request.name",
+                                      "slug": "$request.slug",
+                                      "sortOrder": $request.sortOrder
+                                    }
+                                    """
+
+        when:
+        def actual = mockMvc.perform(post(url)
+                .contentType(APPLICATION_JSON)
+                .content(jsonRequest))
+
+        then:
+        0 * categoryService.createCategory(_)
+        actual.andExpect(status().isBadRequest())
+    }
+
+    def "TestCreateCategory: validation error when name is null"() {
+        given:
+        def url = "/v1/categories"
+        def request = random.nextObject(CategoryRequest)
+        request.name = null
+        def jsonRequest = """
+                                    {
+                                      "parentId": $request.parentId,
+                                      "slug": "$request.slug",
+                                      "sortOrder": $request.sortOrder
+                                    }
+                                    """
+
+        when:
+        def actual = mockMvc.perform(post(url)
+                .contentType(APPLICATION_JSON)
+                .content(jsonRequest))
+
+        then:
+        0 * categoryService.createCategory(_)
+        actual.andExpect(status().isBadRequest())
+    }
+
+    def "TestCreateCategory: validation error when slug is blank"() {
+        given:
+        def url = "/v1/categories"
+        def request = random.nextObject(CategoryRequest)
+        request.slug = ""
+        def jsonRequest = """
+                                    {
+                                      "parentId": $request.parentId,
+                                      "name": "$request.name",
+                                      "slug": "$request.slug",
+                                      "sortOrder": $request.sortOrder
+                                    }
+                                    """
+
+        when:
+        def actual = mockMvc.perform(post(url)
+                .contentType(APPLICATION_JSON)
+                .content(jsonRequest))
+
+        then:
+        0 * categoryService.createCategory(_)
+        actual.andExpect(status().isBadRequest())
+    }
+
+    def "TestCreateCategory: validation error when slug is null"() {
+        given:
+        def url = "/v1/categories"
+        def request = random.nextObject(CategoryRequest)
+        request.slug = null
+        def jsonRequest = """
+                                    {
+                                      "parentId": $request.parentId,
+                                      "name": "$request.name",
+                                      "sortOrder": $request.sortOrder
+                                    }
+                                    """
+
+        when:
+        def actual = mockMvc.perform(post(url)
+                .contentType(APPLICATION_JSON)
+                .content(jsonRequest))
+
+        then:
+        0 * categoryService.createCategory(_)
+        actual.andExpect(status().isBadRequest())
+    }
+
+    def "TestCreateCategory: validation error when name is whitespace only"() {
+        given:
+        def url = "/v1/categories"
+        def request = random.nextObject(CategoryRequest)
+        request.name = "   "
+        def jsonRequest = """
+                                    {
+                                      "parentId": $request.parentId,
+                                      "name": "$request.name",
+                                      "slug": "$request.slug",
+                                      "sortOrder": $request.sortOrder
+                                    }
+                                    """
+
+        when:
+        def actual = mockMvc.perform(post(url)
+                .contentType(APPLICATION_JSON)
+                .content(jsonRequest))
+
+        then:
+        0 * categoryService.createCategory(_)
+        actual.andExpect(status().isBadRequest())
+    }
+
+    def "TestCreateCategory: validation error when slug is whitespace only"() {
+        given:
+        def url = "/v1/categories"
+        def request = random.nextObject(CategoryRequest)
+        request.slug = "   "
+        def jsonRequest = """
+                                    {
+                                      "parentId": $request.parentId,
+                                      "name": "$request.name",
+                                      "slug": "$request.slug",
+                                      "sortOrder": $request.sortOrder
+                                    }
+                                    """
+
+        when:
+        def actual = mockMvc.perform(post(url)
+                .contentType(APPLICATION_JSON)
+                .content(jsonRequest))
+
+        then:
+        0 * categoryService.createCategory(_)
+        actual.andExpect(status().isBadRequest())
+    }
 }

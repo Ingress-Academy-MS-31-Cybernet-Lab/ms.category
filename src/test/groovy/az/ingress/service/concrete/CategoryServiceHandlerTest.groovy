@@ -33,17 +33,25 @@ class CategoryServiceHandlerTest extends Specification {
         def categoryRequest = random.nextObject(CategoryRequest)
         categoryRequest.parentId = null
 
+        def savedEntity = new CategoryEntity(
+                name: categoryRequest.name,
+                slug: categoryRequest.slug,
+                parent: null
+        )
+
+        categoryRepository.existsBySlug(categoryRequest.slug) >> false
+        categoryRepository.save(_ as CategoryEntity) >> savedEntity
+
         when:
         categoryService.createCategory(categoryRequest)
 
         then:
-        1 * categoryRepository.existsBySlug(categoryRequest.slug) >> false
-        1 * categoryRepository.save(_ as CategoryEntity) >> { CategoryEntity entity ->
-            assert entity.slug == categoryRequest.slug
-            assert entity.name == categoryRequest.name
-            assert entity.parent == null
-            return entity
-        }
+        1 * categoryRepository.existsBySlug(categoryRequest.slug)
+        1 * categoryRepository.save({
+            it.slug == categoryRequest.slug &&
+                    it.name == categoryRequest.name &&
+                    it.parent == null
+        })
         1 * cacheUtil.deleteKey(CATEGORY_CACHE_KEY)
         0 * categoryRepository.findById(_)
     }
@@ -80,6 +88,7 @@ class CategoryServiceHandlerTest extends Specification {
 
         then:
         1 * categoryRepository.existsBySlug(categoryRequest.slug) >> true
+        0 * categoryRepository.findById(_)
         0 * categoryRepository.save(_)
         0 * cacheUtil.deleteKey(_)
 
@@ -90,7 +99,6 @@ class CategoryServiceHandlerTest extends Specification {
     def "TestCreateCategory should throw NotFoundException when parent not found"() {
         given:
         def categoryRequest = random.nextObject(CategoryRequest)
-        categoryRequest.parentId = 999L
 
         when:
         categoryService.createCategory(categoryRequest)
@@ -100,7 +108,6 @@ class CategoryServiceHandlerTest extends Specification {
         1 * categoryRepository.findById(categoryRequest.parentId) >> Optional.empty()
         0 * categoryRepository.save(_)
         0 * cacheUtil.deleteKey(_)
-        8
         and:
         thrown(NotFoundException)
     }

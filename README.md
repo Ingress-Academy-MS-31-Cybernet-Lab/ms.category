@@ -1,4 +1,4 @@
-## change.my.name
+## ms.category
 
 ### Table of Contents
 
@@ -8,7 +8,7 @@
 ### Run
 
 ```shell script
-$ java -jar change.my.name.jar
+$ java -jar ms.category.jar
 ```
 
 ### Tech stack
